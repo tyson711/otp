@@ -1,23 +1,27 @@
+import { useState } from 'react'
 import logo from './logo.svg';
 import './App.css';
-
+import OTP from './OTP'
 function App() {
+  const [isWebAPI, setIsWebAPI]=useState(false)
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
+        <span
           className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+          onClick={() => setIsWebAPI(false)}
         >
-          Learn React
-        </a>
+          OTP-autocomplete
+        </span>
+        <span
+          className="App-link"
+          onClick={() => setIsWebAPI(true)}
+        >
+          OTP-Web API
+        </span>
       </header>
+      <OTP isWebAPI={isWebAPI} />
     </div>
   );
 }
