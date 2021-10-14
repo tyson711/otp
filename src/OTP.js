@@ -8,6 +8,7 @@ function OTP({ isWebAPI = true }) {
                 const form = input.closest('form')
                 if (form) {
                     form.addEventListener('submit', e => {
+                        alert('submit')
                         ac.abort()
                     })
                 }
@@ -17,6 +18,7 @@ function OTP({ isWebAPI = true }) {
                 signal: ac.signal
             })
             .then(otp => {
+                // input.value = otp.code
                 setCode(otp.code)
                 alert('SMS Code:', otp, otp.code)
                 if (form) form.submit()
