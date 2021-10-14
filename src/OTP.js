@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react'
-function OTP({ isWebAPI = false }) {
+function OTP({ isWebAPI = true }) {
     const [code, setCode] = useState()
-    useEffect(() => {
-        alert("OTPCredential' in window'", 'OTPCredential' in window)
-        if (isWebAPI && 'OTPCredential' in window) {
-            window.addEventListener('DOMContentLoaded', e => {
-                const input = document.querySelector('input[autocomplete="one-time-code"]')
+    function callCredential(){
+        const input = document.querySelector('input[autocomplete="one-time-code"]')
                 if (!input) return
                 const ac = new AbortController()
                 const form = input.closest('form')
@@ -14,21 +11,25 @@ function OTP({ isWebAPI = false }) {
                         ac.abort()
                     })
                 }
-                alert('navigator.credentials:', navigator.credentials)
-                navigator.credentials
-                    .get({
-                        otp: { transport: ['sms'] },
-                        signal: ac.signal
-                    })
-                    .then(otp => {
-                        setCode(otp.code)
-                        alert('SMS Code:', otp, otp.code)
-                        if (form) form.submit()
-                    })
-                    .catch(err => {
-                        alert('cache err:', err)
-                        console.log(err)
-                    })
+        navigator.credentials
+            .get({
+                otp: { transport: ['sms'] },
+                signal: ac.signal
+            })
+            .then(otp => {
+                setCode(otp.code)
+                alert('SMS Code:', otp, otp.code)
+                if (form) form.submit()
+            })
+            .catch(err => {
+                alert('cache err:', err)
+                console.log(err)
+            })
+    }
+    useEffect(() => {
+        if (isWebAPI && 'OTPCredential' in window) {
+            window.addEventListener('DOMContentLoaded', e => {
+                callCredential()                
             })
         }
     }, [isWebAPI])
@@ -36,8 +37,7 @@ function OTP({ isWebAPI = false }) {
         <h1>{isWebAPI ? "isWebAPI" : "NOT WebAPI"}</h1>
         <input type="text" autoComplete="one-time-code" inputMode="numeric" value={code} />
         <div onClick={() => {
-            alert('navigator.credentials: ', navigator.credentials)
-            console.log('navigator.credentials: ', navigator.credentials)
+            callCredential()
         }}>TEST credentials</div>
     </div>
 }
